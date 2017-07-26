@@ -2,35 +2,81 @@
 <html>
 <head>
 	<title>Life Game</title>
-
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Special+Elite">	
 	<style>
-		table {
-			border-collapse: collapse;
+		body {
+			font-family: 'Special Elite', arial;
 		}
 
-		td {
-			width: 2px;
-			height: 2px;
+		.table {
+			border-collapse: collapse;
+			width: 500px;
+			height: 500px;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: -1;
+		}
+
+		.img-wrapper {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			z-index: 1;
+		}
+
+		.wrapper {
+			position: relative;
+			width: 500px;
+			height: 500px;
+		}
+
+		.message {
+			width: 500px;
+		}
+
+		.input-wrapper {
+			display: flex;
+			flex-direction: row nowrap;
+			width: 500px;
+			justify-content: space-around;
+		}
+
+		input, button {
+			max-width: 145px;
+			margin: 3px;
+			font-family: 'Special Elite', arial;
+			padding-top: 5px;
+			padding-bottom: 3px;
 		}
 
 
 	</style>
 </head>
 <body>
+	<div id='wrapper' class='wrapper'>
+		<img id='img' class="img-wrapper" src='start-microscope.png'>
+		<table id='table' class='table'></table>
+	</div>
+	
 
-	<table id='table'></table>
+	<p class='message'>Dear user, you better set the number of rows/columns to more than 200 for better visualization. Have fun!</p>
 
-	<p>You better set the number of rows/columns to more than 100 for better visualization</p>
-
-	<input id='rows' placeholder="set number of rows">
-	<input id='columns' placeholder="set number of columns">
-	<button id='start-btn'>start</button>
-	<button id='pause-btn'>pause</button>
-	<button id='resume-btn'>resume</button>
+	<div class='input-wrapper'>
+		<input id='rows' placeholder="Number of rows">
+		<input id='columns' placeholder="Number of columns">
+		<button id='start-btn'>Start</button>
+		<button id='pause-btn'>Pause</button>
+		<button id='resume-btn'>Resume</button>
+	</div>
 
 	
 	<script>
+		var img = document.getElementById('img');
 		var table = document.getElementById('table');
+		
 		var startBtn = document.getElementById('start-btn');
 		var addBtn = document.getElementById('add-btn');
 		var pauseBtn = document.getElementById('pause-btn');
@@ -42,10 +88,11 @@
 		var numCols;
 		var array = [];
 		var arrayNew =[];
-		var colors = ['black', 'white'];
+		var colors = ['#898988', '#dbad3b'];
 		var arrayU = [];
 				
 		function createTable() {
+			img.src = 'empty-microscope.png';
 			table.innerHTML = '';
 			userRows = document.getElementById('rows').value;
 			userColumns = document.getElementById('columns').value;
@@ -92,79 +139,63 @@
 				for (var x = 0; x < numCols; x++) {
 					
 					var countBlack = 0;
-					var countWhite = 0;
+					var countAlive = 0;
 
 						
 						if (array[y-1] != undefined && array[y-1][x-1] != undefined) {
-							if (array[y-1][x-1] == 'black') {
-								countBlack++;
-							} else { 
-								countWhite++;
+							if (array[y-1][x-1] != '#898988') {
+								countAlive++;
 							}
 						}
 
 						if (array[y-1] != undefined && array[y-1][x] != undefined) {
-							if (array[y-1][x] == 'black') {
-								countBlack++;
-							} else { 
-								countWhite++;
+							if (array[y-1][x] != '#898988') {
+								countAlive++;
 							}
 						}
 
 						if (array[y-1] != undefined && array[y-1][x+1] != undefined) {
-							if (array[y-1][x+1] == 'black') {
-								countBlack++;
-							} else { 
-								countWhite++;
+							if (array[y-1][x+1] != '#898988') {
+								countAlive++;
 							}
 						}
 
 						if (array[y] != undefined && array[y][x-1] != undefined) {
-							if (array[y][x-1] == 'black') {
-								countBlack++;
-							} else { 
-								countWhite++;
+							if (array[y][x-1] != '#898988') {
+								countAlive++;
 							}
 						}
 
 						if (array[y] != undefined && array[y][x+1] != undefined) {
-							if (array[y][x+1] == 'black') {
-								countBlack++;
-							} else { 
-								countWhite++;
+							if (array[y][x+1] != '#898988') {
+								countAlive++;
 							}
 						}
 
 						if (array[y+1] != undefined && array[y+1][x-1] != undefined) {
-							if (array[y+1][x-1] == 'black') {
-								countBlack++;
-							} else { 
-								countWhite++;
+							if (array[y+1][x-1] != '#898988') {
+								countAlive++;
 							}
 						}
 
 						if (array[y+1] != undefined && array[y+1][x] != undefined) {
-							if (array[y+1][x] == 'black') {
-								countBlack++;
-							} else { 
-								countWhite++
+							if (array[y+1][x] != '#898988') {
+								countAlive++
 							}
 						}
 
 						if (array[y+1] != undefined && array[y+1][x+1] != undefined) {
-							if (array[y+1][x+1] == 'black') {
-								countBlack++;
-							} else { 
-								countWhite++;
+							if (array[y+1][x+1] != '#898988') {
+								countAlive++;
 							}
 						}
 
-						if (array[y][x] == 'white' && countWhite > 3 || countWhite < 2) {
-							arrayNew[y][x] = 'black';
+						if (array[y][x] == '#dbad3b' && countAlive > 3 || countAlive < 2) {
+							arrayNew[y][x] = '#898988';
 						}
 
-						if (array[y][x] == 'black' && countWhite == 3) {
-							arrayNew[y][x] = 'white';
+						if (array[y][x] == '#898988' && countAlive == 3) {
+							arrayNew[y][x] = '#dbad3b';
 						}
 
 				}
@@ -187,7 +218,6 @@
 		var timer = setInterval(function () {
 			checkCells();
 			redrawTable();
-			//Promise.resolve().then(checkCells()).then(redrawTable())
 		}, 50);
 
 		
@@ -219,9 +249,6 @@
 				redrawTable();
 		
 		}
-
-		
-		
 
 	</script>
 
