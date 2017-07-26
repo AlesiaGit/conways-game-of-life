@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Life Game</title>
+
+	<style>
+		table {
+			border-collapse: collapse;
+		}
+
+		td {
+			width: 2px;
+			height: 2px;
+		}
+
+
+	</style>
+</head>
+<body>
+
+	<table id='table'></table>
+
+	<p>You better set the number of rows/columns to more than 100 for better visualization</p>
+
+	<input id='rows' placeholder="set number of rows">
+	<input id='columns' placeholder="set number of columns">
+	<button id='start-btn'>start</button>
+	<button id='pause-btn'>pause</button>
+	<button id='resume-btn'>resume</button>
+
+	
+	<script>
+		var table = document.getElementById('table');
+		var startBtn = document.getElementById('start-btn');
+		var addBtn = document.getElementById('add-btn');
+		var pauseBtn = document.getElementById('pause-btn');
+		var resumeBtn = document.getElementById('resume-btn');
+		var userRows = document.getElementById('rows').value;
+		var userColumns = document.getElementById('columns').value;
+
+		var numRows;
+		var numCols;
+		var array = [];
+		var arrayNew =[];
+		var colors = ['black', 'white'];
+		var arrayU = [];
+				
+		function createTable() {
+			table.innerHTML = '';
+			userRows = document.getElementById('rows').value;
+			userColumns = document.getElementById('columns').value;
+			numRows = userRows;
+			numCols = userColumns;
+			for (var y = 0; y < numRows; y++) {
+				var row = document.createElement('tr');
+				table.append(row);
+
+				array.push([]);
+				
+				for (var x = 0; x < numCols; x++) {
+					var cell = document.createElement('td');
+					
+
+					var random = Math.round((Math.random()*5) + 1);
+
+					if (random == 5) {
+						color = colors[0];
+					} else {
+						color = colors[1];
+					}
+
+					array[y].push(color);
+						
+					cell.style.backgroundColor = color;
+
+					row.appendChild(cell);
+
+				}
+			}
+		}
+
+
+			
+		startBtn.addEventListener('click', createTable);
+		
+
+		function checkCells() {
+			arrayNew = array.map(function(elem) {return elem.map(function(key) {return key;});});
+			
+			
+			for (var y = 0; y < numRows; y++) {
+				for (var x = 0; x < numCols; x++) {
+					
+					var countBlack = 0;
+					var countWhite = 0;
+
+						
+						if (array[y-1] != undefined && array[y-1][x-1] != undefined) {
+							if (array[y-1][x-1] == 'black') {
+								countBlack++;
+							} else { 
+								countWhite++;
+							}
+						}
+
+						if (array[y-1] != undefined && array[y-1][x] != undefined) {
+							if (array[y-1][x] == 'black') {
+								countBlack++;
+							} else { 
+								countWhite++;
+							}
+						}
+
+						if (array[y-1] != undefined && array[y-1][x+1] != undefined) {
+							if (array[y-1][x+1] == 'black') {
+								countBlack++;
+							} else { 
+								countWhite++;
+							}
+						}
+
+						if (array[y] != undefined && array[y][x-1] != undefined) {
+							if (array[y][x-1] == 'black') {
+								countBlack++;
+							} else { 
+								countWhite++;
+							}
+						}
+
+						if (array[y] != undefined && array[y][x+1] != undefined) {
+							if (array[y][x+1] == 'black') {
+								countBlack++;
+							} else { 
+								countWhite++;
+							}
+						}
+
+						if (array[y+1] != undefined && array[y+1][x-1] != undefined) {
+							if (array[y+1][x-1] == 'black') {
+								countBlack++;
+							} else { 
+								countWhite++;
+							}
+						}
+
+						if (array[y+1] != undefined && array[y+1][x] != undefined) {
+							if (array[y+1][x] == 'black') {
+								countBlack++;
+							} else { 
+								countWhite++
+							}
+						}
+
+						if (array[y+1] != undefined && array[y+1][x+1] != undefined) {
+							if (array[y+1][x+1] == 'black') {
+								countBlack++;
+							} else { 
+								countWhite++;
+							}
+						}
+
+						if (array[y][x] == 'white' && countWhite > 3 || countWhite < 2) {
+							arrayNew[y][x] = 'black';
+						}
+
+						if (array[y][x] == 'black' && countWhite == 3) {
+							arrayNew[y][x] = 'white';
+						}
+
+				}
+			}
+
+			array = arrayNew;
+		}
+
+
+		
+		function redrawTable() {
+			for (var y = 0; y < numRows; y++) {
+				for (var x = 0; x < numCols; x++) {
+					table.rows[y].cells[x].style.backgroundColor = array[y][x];
+				}
+			}
+		}
+
+
+		var timer = setInterval(function () {
+			checkCells();
+			redrawTable();
+			//Promise.resolve().then(checkCells()).then(redrawTable())
+		}, 50);
+
+		
+		pauseBtn.addEventListener('click', pauseLife);
+		resumeBtn.addEventListener('click', resumeLife);
+
+
+
+
+		function pauseLife() {
+			if (timer) {
+				clearInterval(timer);
+				timer = undefined;
+			}
+		}
+
+		function resumeLife() {
+			if (timer) {
+				return;
+			}
+			timer = setInterval(function () {
+				checkCells();
+				redrawTable();
+			}, 50);
+		}
+
+		function step() {
+				checkCells();
+				redrawTable();
+		
+		}
+
+		
+		
+
+	</script>
+
+</body>
+</html>
